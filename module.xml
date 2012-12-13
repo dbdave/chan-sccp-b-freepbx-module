@@ -1,0 +1,16 @@
+<module>
+        <rawname>sccp</rawname>
+        <name>SCCP Manager</name>
+        <version>0.0.1</version>
+        <type>setup</type>
+        <category>Basic</category>
+        <description>chan-sccp-b helper module </description>
+        <menuitems>
+                <sccpline>SCCP Line Manager</sccpline>
+                <sccpdevice>SCCP Device Manager</sccpdevice>
+                <sccpbutton>SCCP Button Manager</sccpbutton>
+        </menuitems>
+        <changelog></changelog>
+        <location></location>
+        <md5sum></md5sum>
+</module>

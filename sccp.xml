@@ -1,0 +1,1078 @@
+<?xml version="1.0"?>
+<sccp>
+  <version>4.1.0</version>
+  <revision>3867</revision>
+  <section name="general">
+    <params>
+      <param name="servername">
+        <required>1</required>
+        <type>string</type>
+        <size>45</size>
+        <default>Asterisk</default>
+        <description>show this name on the device registration </description>
+      </param>
+      <param name="keepalive">
+        <required>1</required>
+        <type>int</type>
+        <size>8</size>
+        <default>60</default>
+        <description>Phone keep alive message every 60 secs. Used to check the voicemail and keep an open connection between server and phone (nat).  Don\'t set any lower than 60 seconds. </description>
+      </param>
+      <param name="debug">
+        <required>0</required>
+        <multiple>1</multiple>
+        <type>generic</type>
+        <generic_parser>(debug)=all,none,core,sccp,hint,rtp,device,line,action,channel,cli,config,feature,feature_button,softkey,indicate,pbx,socket,mwi,event,adv_feature,conference,buttontemplate,speeddial,codec,realtime,lock,threadlock,message,newcode,high,myi,fixme,fyi</generic_parser>
+        <default>core</default>
+        <description>console debug level or categories examples: debug = 11 | debug = mwi,event,core | debug = all | debug = none or 0 possible categories:  core, sccp, hint, rtp, device, line, action, channel, cli, config, feature, feature_button, softkey, indicate, pbx socket, mwi, event, adv_feature, conference, buttontemplate, speeddial, codec, realtime, lock, newcode, high, all, none </description>
+      </param>
+      <param name="context">
+        <required>1</required>
+        <type>string</type>
+        <size>45</size>
+        <default>sccp</default>
+        <description>pbx dialplan context </description>
+      </param>
+      <param name="dateformat">
+        <required>0</required>
+        <type>string</type>
+        <size>45</size>
+        <default>D.M.Y</default>
+        <description>M-D-Y in any order. Use M/D/YA (for 12h format) </description>
+      </param>
+      <param name="bindaddr">
+        <required>1</required>
+        <type>generic</type>
+        <generic_parser>(ipaddress)=[[ipaddress]]</generic_parser>
+        <default>0.0.0.0</default>
+        <description>replace with the ip address of the asterisk server (RTP important param) </description>
+      </param>
+      <param name="port">
+        <required>0</required>
+        <type>generic</type>
+        <generic_parser>(port)=[[port]]</generic_parser>
+        <default>2000</default>
+        <description>listen on port 2000 (Skinny, default) </description>
+      </param>
+      <param name="disallow">
+        <required>1</required>
+        <multiple>1</multiple>
+        <type>generic</type>
+        <generic_parser>(codec)=all|(alaw,ulaw,gsm,ilbc,g722,g723,g729,g726,slin,slin16)</generic_parser>
+        <description>First disallow all codecs, for example \'all\' </description>
+      </param>
+      <param name="allow">
+        <required>1</required>
+        <multiple>1</multiple>
+        <type>generic</type>
+        <generic_parser>(codec)=all|(alaw,ulaw,gsm,ilbc,g722,g723,g729,g726,slin,slin16)</generic_parser>
+        <description>Allow codecs in order of preference (Multiple lines allowed) </description>
+      </param>
+      <param name="deny">
+        <required>1</required>
+        <multiple>1</multiple>
+        <type>generic</type>
+        <generic_parser>(deny)=[[ipaddress]],internal</generic_parser>
+        <default>0.0.0.0/0.0.0.0</default>
+        <description>Deny every address except for the only one allowed. example: \'0.0.0.0/0.0.0.0\' </description>
+      </param>
+      <param name="permit">
+        <required>1</required>
+        <multiple>1</multiple>
+        <type>generic</type>
+        <generic_parser>(permit)=[[ipaddress]],internal</generic_parser>
+        <default>internal</default>
+        <description>Accept class C 192.168.1.0 example \'192.168.1.0/255.255.255.0\' You may have multiple rules for masking traffic. Rules are processed from the first to the last. This General rule is valid for all incoming connections. It\'s the 1st filter. using \'internal\' will allow the 10.0.0.0, 172.16.0.0 and 192.168.0.0 networks </description>
+      </param>
+      <param name="quality_over_size">
+        <required>0</required>
+        <type>boolean</type>
+        <default>yes</default>
+        <description>When making decisions during codec selections prefer sound quality over packet size (default true) </description>
+      </param>
+      <param name="localnet">
+        <required>0</required>
+        <multiple>1</multiple>
+        <type>generic</type>
+        <generic_parser>(permit)=[[ipaddress]],internal</generic_parser>
+        <description>All RFC 1918 addresses are local networks, example \'192.168.1.0/255.255.255.0\' </description>
+      </param>
+      <param name="externip">
+        <required>0</required>
+        <multiple>1</multiple>
+        <type>generic</type>
+        <generic_parser>(ipaddress)=[[ipaddress]]</generic_parser>
+        <description>IP Address that we\'re going to notify in RTP media stream </description>
+      </param>
+      <param name="externhost">
+        <required>0</required>
+        <type>string</type>
+        <size>45</size>
+        <description>Hostname (if dynamic) that we\'re going to notify in RTP media stream </description>
+      </param>
+      <param name="externrefresh">
+        <required>0</required>
+        <type>int</type>
+        <size>8</size>
+        <default>60</default>
+        <description>Expire time in seconds for the hostname (dns resolution) </description>
+      </param>
+      <param name="firstdigittimeout">
+        <required>0</required>
+        <type>unsigned int</type>
+        <size>8</size>
+        <default>16</default>
+        <description>Dialing timeout for the 1st digit  </description>
+      </param>
+      <param name="digittimeout">
+        <required>0</required>
+        <type>int</type>
+        <size>8</size>
+        <default>8</default>
+        <description>More digits </description>
+      </param>
+      <param name="digittimeoutchar">
+        <required>0</required>
+        <type>char</type>
+        <default>#</default>
+        <description>You can force the channel to dial with this char in the dialing state </description>
+      </param>
+      <param name="recorddigittimeoutchar">
+        <required>0</required>
+        <type>boolean</type>
+        <default>no</default>
+        <description>You can force the channel to dial with this char in the dialing state </description>
+      </param>
+      <param name="simulate_enbloc">
+        <required>0</required>
+        <type>boolean</type>
+        <default>yes</default>
+        <description>Use simulated enbloc dialing to speedup connection when dialing while onhook (older phones) </description>
+      </param>
+      <param name="autoanswer_ring_time">
+        <required>0</required>
+        <type>unsigned int</type>
+        <size>8</size>
+        <default>1</default>
+        <description>Ringing time in seconds for the autoanswer, the default is 1 </description>
+      </param>
+      <param name="autoanswer_tone">
+        <required>0</required>
+        <type>unsigned int</type>
+        <size>8</size>
+        <default>0x32</default>
+        <description>Autoanswer confirmation tone. For a complete list of tones: grep SKINNY_TONE sccp_protocol.h not all the tones can be played in a connected state, so you have to try. </description>
+      </param>
+      <param name="remotehangup_tone">
+        <required>0</required>
+        <type>unsigned int</type>
+        <size>8</size>
+        <default>0x32</default>
+        <description>Passive hangup notification. 0 for none </description>
+      </param>
+      <param name="transfer_tone">
+        <required>0</required>
+        <type>unsigned int</type>
+        <size>8</size>
+        <default>0</default>
+        <description>Confirmation tone on transfer. Works only between SCCP devices </description>
+      </param>
+      <param name="callwaiting_tone">
+        <required>0</required>
+        <type>unsigned int</type>
+        <size>8</size>
+        <default>0x2d</default>
+        <description>Sets to 0 to disable the callwaiting tone </description>
+      </param>
+      <param name="callwaiting_interval">
+        <required>0</required>
+        <type>unsigned int</type>
+        <size>8</size>
+        <default>0</default>
+        <description>Callwaiting ring interval in seconds. Set to 0 to disable the callwaiting ringing interval (default: 0) </description>
+      </param>
+      <param name="musicclass">
+        <required>0</required>
+        <type>string</type>
+        <size>45</size>
+        <default>default</default>
+        <description>Sets the default music on hold class </description>
+      </param>
+      <param name="language">
+        <required>0</required>
+        <type>string</type>
+        <size>45</size>
+        <default>en</default>
+        <description>Default language setting </description>
+      </param>
+      <param name="callevents">
+        <required>0</required>
+        <type>boolean</type>
+        <default>yes</default>
+        <description>Generate manager events when phone  Performs events (e.g. hold) </description>
+      </param>
+      <param name="accountcode">
+        <required>0</required>
+        <type>string</type>
+        <size>45</size>
+        <default>skinny</default>
+        <description>Accountcode to ease billing </description>
+      </param>
+      <param name="sccp_tos">
+        <required>0</required>
+        <type>generic</type>
+        <generic_parser>(tos)=[[value]]|lowdelay|throughput|reliability|mincost|none</generic_parser>
+        <default>0x68</default>
+        <description>Sets the default sccp signaling packets Type of Service (TOS)  (defaults to 0x68 = 01101000 = 104 = DSCP:011010 = AF31) Others possible values : [CS?, AF??, EF], [0x??], [lowdelay, throughput, reliability, mincost(solaris)], none </description>
+      </param>
+      <param name="sccp_cos">
+        <required>0</required>
+        <type>generic</type>
+        <generic_parser>(cos)=[[value]]</generic_parser>
+        <default>4</default>
+        <description>sets the default sccp signaling packets Class of Service (COS) (defaults to 4) </description>
+      </param>
+      <param name="audio_tos">
+        <required>0</required>
+        <type>generic</type>
+        <generic_parser>(tos)=[[value]]|lowdelay|throughput|reliability|mincost|none</generic_parser>
+        <default>0xB8</default>
+        <description>sets the default audio/rtp packets Type of Service (TOS)       (defaults to 0xb8 = 10111000 = 184 = DSCP:101110 = EF) </description>
+      </param>
+      <param name="audio_cos">
+        <required>0</required>
+        <type>generic</type>
+        <generic_parser>(cos)=[[value]]</generic_parser>
+        <default>6</default>
+        <description>sets the default audio/rtp packets Class of Service (COS)      (defaults to 6) </description>
+      </param>
+      <param name="video_tos">
+        <required>0</required>
+        <type>generic</type>
+        <generic_parser>(tos)=[[value]]|lowdelay|throughput|reliability|mincost|none</generic_parser>
+        <default>0x88</default>
+        <description>sets the default video/rtp packets Type of Service (TOS)       (defaults to 0x88 = 10001000 = 136 = DSCP:100010 = AF41) </description>
+      </param>
+      <param name="video_cos">
+        <required>0</required>
+        <type>generic</type>
+        <generic_parser>(cos)=[[value]]</generic_parser>
+        <default>5</default>
+        <description>sets the default video/rtp packets Class of Service (COS)      (defaults to 5) </description>
+      </param>
+      <param name="echocancel">
+        <required>0</required>
+        <type>boolean</type>
+        <default>yes</default>
+        <description>sets the phone echocancel for all devices </description>
+      </param>
+      <param name="silencesuppression">
+        <required>0</required>
+        <type>boolean</type>
+        <default>no</default>
+        <description>sets the silence suppression for all devices we don\'t have to trust the phone ip address, but the ip address of the connection </description>
+      </param>
+      <param name="trustphoneip">
+        <required>0</required>
+        <type>boolean</type>
+        <default>no</default>
+        <description>The phone has a ip address. It could be private, so if the phone is behind NAT  </description>
+      </param>
+      <param name="earlyrtp">
+        <required>0</required>
+        <type>generic</type>
+        <generic_parser>(earlyrtp)=none|offhook|dial|ringout|progress</generic_parser>
+        <default>progress</default>
+        <description>valid options: none, offhook, dial, ringout and progress. default is progress. The audio stream will be open in the progress and connected state by default. </description>
+      </param>
+      <param name="dnd">
+        <required>0</required>
+        <type>generic</type>
+        <generic_parser>(dnd)=reject|silent|user|on|off</generic_parser>
+        <default>reject</default>
+        <description>turn on the dnd softkey for all devices. Valid values are \'off\', \'on\' (busy signal), \'reject\' (busy signal), \'silent\' (ringer = silent) </description>
+      </param>
+      <param name="private">
+        <required>0</required>
+        <type>boolean</type>
+        <default>yes</default>
+        <description>permit the private function softkey </description>
+      </param>
+      <param name="mwilamp">
+        <required>0</required>
+        <type>generic</type>
+        <generic_parser>(mwilamp)=on|off|wink|flash|blink</generic_parser>
+        <default>yes</default>
+        <description>Set the MWI lamp style when MWI active to on, off, wink, flash or blink </description>
+      </param>
+      <param name="mwioncall">
+        <required>0</required>
+        <type>boolean</type>
+        <default>no</default>
+        <description>Set the MWI on call. </description>
+      </param>
+      <param name="blindtransferindication">
+        <required>0</required>
+        <type>generic</type>
+        <generic_parser>(blindtransferindication)=moh|ring</generic_parser>
+        <default>ring</default>
+        <description>moh or ring. the blind transfer should ring the caller or just play music on hold </description>
+      </param>
+      <param name="cfwdall">
+        <required>0</required>
+        <type>boolean</type>
+        <default>yes</default>
+        <description>activate the callforward ALL stuff and softkeys </description>
+      </param>
+      <param name="cfwdbusy">
+        <required>0</required>
+        <type>boolean</type>
+        <default>yes</default>
+        <description>activate the callforward BUSY stuff and softkeys </description>
+      </param>
+      <param name="cfwdnoanswer">
+        <required>0</required>
+        <type>boolean</type>
+        <default>yes</default>
+        <description>activate the callforward NOANSWER stuff and softkeys </description>
+      </param>
+      <param name="nat">
+        <required>0</required>
+        <type>boolean</type>
+        <default>no</default>
+        <description>Global NAT support (default Off) </description>
+      </param>
+      <param name="directrtp">
+        <required>0</required>
+        <type>boolean</type>
+        <default>no</default>
+        <description>This option allow devices to do direct RTP sessions (default Off) </description>
+      </param>
+      <param name="allowoverlap">
+        <required>0</required>
+        <type>boolean</type>
+        <default>no</default>
+        <description>Enable overlap dialing support. If enabled, starts dialing immediately and sends remaing digits as DTMF/inband. Use with extreme caution as it is very dialplan and provider dependent. (Default is off) </description>
+      </param>
+      <param name="callgroup">
+        <required>0</required>
+        <type>generic</type>
+        <generic_parser>(group)=[[fromto]],[[value]]</generic_parser>
+        <description>We are in caller groups 1,3,4. Valid for all lines </description>
+      </param>
+      <param name="pickupgroup">
+        <required>0</required>
+        <type>generic</type>
+        <generic_parser>(group)=[[fromto]],[[value]]</generic_parser>
+        <description>We can do call pick-p for call group 1,3,4,5. Valid for all lines </description>
+      </param>
+      <param name="pickupmodeanswer">
+        <required>0</required>
+        <type>boolean</type>
+        <description>We can do call pick-p for call group 1,3,4,5. Valid for all lines </description>
+      </param>
+      <param name="amaflags">
+        <required>0</required>
+        <type>generic</type>
+        <generic_parser>(amaflags)=[[string]]</generic_parser>
+        <description>Sets the default AMA flag code stored in the CDR record </description>
+      </param>
+      <param name="protocolversion">
+        <required>0</required>
+        <type>string</type>
+        <size>45</size>
+        <default>20</default>
+        <description>skinny version protocol. (excluding 12-14) </description>
+      </param>
+      <param name="callanswerorder">
+        <required>0</required>
+        <type>generic</type>
+        <generic_parser>(callanswerorder)=oldestfirst|lastfirst</generic_parser>
+        <default>oldestfirst</default>
+        <description>oldestfirst or lastestfirst </description>
+      </param>
+      <param name="regcontext">
+        <required>0</required>
+        <type>string</type>
+        <size>45</size>
+        <default>sccpregistration</default>
+        <description>SCCP Lines will we added to this context in asterisk for Dundi lookup purposes.  Don not set to a manually created context. The context will be autocreated. You can share the sip/iax context if you like. </description>
+      </param>
+      <param name="devicetable">
+        <required>0</required>
+        <type>string</type>
+        <size>45</size>
+        <default>sccpdevice</default>
+        <description>datebasetable for devices </description>
+      </param>
+      <param name="linetable">
+        <required>0</required>
+        <type>string</type>
+        <size>45</size>
+        <default>sccpline</default>
+        <description>datebasetable for lines </description>
+      </param>
+      <param name="meetme">
+        <required>0</required>
+        <type>boolean</type>
+        <default>yes</default>
+        <description>enable/disable conferencing via meetme (on/off), make sure you have one of the meetme apps mentioned below activated in module.conf when switching meetme=on it will search for the first of these three possible meetme applications and set these defaults  - {\'MeetMe\', \'qd\'},  - {\'ConfBridge\', \'Mac\'},  - {\'Konference\', \'MTV\'} </description>
+      </param>
+      <param name="meetmeopts">
+        <required>0</required>
+        <type>string</type>
+        <size>45</size>
+        <default>qxd</default>
+        <description>options to send the meetme application, defaults are dependent on meetme app see the list above Other options (app_meetme: A,a,b,c,C,d,D,E,e,F,i,I,l,L,m,M,o,p,P,q,r,s,S,t,T,w,x,X,1) see meetme specific documentation </description>
+      </param>
+      <param name="jbenable">
+        <required>0</required>
+        <type>generic</type>
+        <generic_parser>(jbflags_enable)=on|off</generic_parser>
+        <default>no</default>
+        <description>Enables the use of a jitterbuffer on the receiving side of a sccp channel. Defaults to \'no\'. An enabled jitterbuffer will be used only if the sending side can create and the receiving side can not accept jitter. The sccp channel can accept jitter, thus a jitterbuffer on the receive sccp side will be used only if it is forced and enabled. </description>
+      </param>
+      <param name="jbforce">
+        <required>0</required>
+        <type>generic</type>
+        <generic_parser>(jbflags_force)=on|off</generic_parser>
+        <default>no</default>
+        <description>Forces the use of a jitterbuffer on the receive side of a sccp channel. Defaults to \'no\'. </description>
+      </param>
+      <param name="jblog">
+        <required>0</required>
+        <type>generic</type>
+        <generic_parser>(jbflags_log)=on|off</generic_parser>
+        <default>no</default>
+        <description>Enables jitterbuffer frame logging. Defaults to \'no\'. </description>
+      </param>
+      <param name="jbmaxsize">
+        <required>0</required>
+        <type>int</type>
+        <size>8</size>
+        <default>200</default>
+        <description>Max length of the jitterbuffer in milliseconds. </description>
+      </param>
+      <param name="jbresyncthreshold">
+        <required>0</required>
+        <type>int</type>
+        <size>8</size>
+        <default>1000</default>
+        <description>Jump in the frame timestamps over which the jitterbuffer is resynchronized. Useful to improve the quality of the voice, with big jumps in/broken timestamps, usually sent from exotic devices and programs. Defaults to 1000. </description>
+      </param>
+      <param name="jbimpl">
+        <required>0</required>
+        <type>string</type>
+        <size>45</size>
+        <default>fixed</default>
+        <description>Jitterbuffer implementation, used on the receiving side of a sccp channel. Two implementations are currently available - \'fixed\' (with size always equals to jbmaxsize) - \'adaptive\' (with variable size, actually the new jb of IAX2). Defaults to fixed. </description>
+      </param>
+      <param name="hotline_enabled">
+        <required>0</required>
+        <type>boolean</type>
+        <default>yes</default>
+        <description> Setting the hotline Feature on a device, will make it connect to a predefined extension as soon as the Receiver is picked up or the \'New Call\' Button is pressed. No number has to be given. This works even on devices which  have no entry in the config file or realtime database.  The hotline function can be used in different circumstances, for example at a door, where you want people to be  able to only call one number, or for unprovisioned phones to only be able to call the helpdesk to get their phone set up	If hotline_enabled = yes, any device which is not included in the configuration explicitly will be allowed  to registered as a guest device. All such devices will register on a single shared line called \'hotline\'. </description>
+      </param>
+      <param name="hotline_context">
+        <required>0</required>
+        <type>generic</type>
+        <generic_parser>(hotline_context)=[[context]]</generic_parser>
+        <default>sccp</default>
+      </param>
+      <param name="hotline_extension">
+        <required>0</required>
+        <type>generic</type>
+        <generic_parser>(hotline_exten)=[[value]]</generic_parser>
+        <default>111</default>
+      </param>
+      <param name="fallback">
+        <required>0</required>
+        <type>string</type>
+        <size>45</size>
+        <default>no</default>
+        <description>Immediately fallback to primairy/master server when it becomes available (master/slave asterisk cluster) (TokenRequest) Possible values are: true/false/odd/even (odd/even uses the last digit of the MAC address to make the decision) Value can be changed online via CLI/AMI command "fallback=[true/false]" </description>
+      </param>
+      <param name="backoff_time">
+        <required>0</required>
+        <type>int</type>
+        <size>8</size>
+        <default>60</default>
+        <description>Time to wait before re-asking to fallback to primairy server (Token Reject Backoff Time) </description>
+      </param>
+    </params>
+  </section>
+  <section name="device">
+    <params>
+      <param name="name">
+        <required>0</required>
+        <type>string</type>
+        <size>45</size>
+        <description>device name </description>
+      </param>
+      <param name="device">
+        <required>1</required>
+        <type>string</type>
+        <size>45</size>
+        <description>device type </description>
+      </param>
+      <param name="devicetype">
+        <required>1</required>
+        <type>string</type>
+        <size>45</size>
+        <description>device type </description>
+      </param>
+      <param name="type">
+        <required>0</required>
+        <type>string</type>
+        <size>45</size>
+        <description>used for device templates, value will be inherited. </description>
+      </param>
+      <param name="description">
+        <required>0</required>
+        <type>string</type>
+        <size>45</size>
+        <description>device description </description>
+      </param>
+      <param name="keepalive">
+        <required>0</required>
+        <type>int</type>
+        <size>8</size>
+        <description>set keepalive to 60 </description>
+      </param>
+      <param name="tzoffset">
+        <required>0</required>
+        <type>int</type>
+        <size>8</size>
+        <default>0</default>
+        <description>time zone offset </description>
+      </param>
+      <param name="disallow">
+        <required>0</required>
+        <multiple>1</multiple>
+        <type>generic</type>
+        <generic_parser>(codec)=all|(alaw,ulaw,gsm,ilbc,g722,g723,g729,g726,slin,slin16)</generic_parser>
+      </param>
+      <param name="allow">
+        <required>0</required>
+        <multiple>1</multiple>
+        <type>generic</type>
+        <generic_parser>(codec)=all|(alaw,ulaw,gsm,ilbc,g722,g723,g729,g726,slin,slin16)</generic_parser>
+      </param>
+      <param name="transfer">
+        <required>0</required>
+        <type>boolean</type>
+        <default>yes</default>
+        <description>enable or disable the transfer capability. It does remove the transfer softkey </description>
+      </param>
+      <param name="park">
+        <required>0</required>
+        <type>boolean</type>
+        <default>yes</default>
+        <description>take a look to the compile how-to. Park stuff is not compiled by default </description>
+      </param>
+      <param name="cfwdall">
+        <required>0</required>
+        <type>boolean</type>
+        <default>no</default>
+        <description>activate the call forward stuff and soft keys </description>
+      </param>
+      <param name="cfwdbusy">
+        <required>0</required>
+        <type>boolean</type>
+        <default>no</default>
+        <description>allow call forward when line is busy </description>
+      </param>
+      <param name="cfwdnoanswer">
+        <required>0</required>
+        <type>boolean</type>
+        <default>no</default>
+        <description>allow call forward when line if not being answered </description>
+      </param>
+      <param name="dnd">
+        <required>0</required>
+        <type>boolean</type>
+        <description>parameter \'dnd\' is obsolete. This setting has moved to the line definition. To allow/disallow dnd you should use dndFeature in device and setup dnd per line. </description>
+      </param>
+      <param name="dndFeature">
+        <required>0</required>
+        <type>boolean</type>
+        <default>yes</default>
+        <description>allow usage do not disturb button </description>
+      </param>
+      <param name="dtmfmode">
+        <required>0</required>
+        <type>generic</type>
+        <generic_parser>(dtmfmode)=outofband|inband</generic_parser>
+        <default>inband</default>
+        <description>inband or outofband. outofband is the native cisco dtmf tone play. Some phone model does not play dtmf tones while connected (bug?), so the default is inband </description>
+      </param>
+      <param name="imageversion">
+        <required>0</required>
+        <type>string</type>
+        <size>45</size>
+        <description>useful to upgrade old firmwares (the ones that do not load *.xml from the tftp server) </description>
+      </param>
+      <param name="deny">
+        <required>0</required>
+        <multiple>1</multiple>
+        <type>generic</type>
+        <generic_parser>(deny)=[[ipaddress]],internal</generic_parser>
+        <description>Same as general </description>
+      </param>
+      <param name="permit">
+        <required>0</required>
+        <multiple>1</multiple>
+        <type>generic</type>
+        <generic_parser>(permit)=[[ipaddress]],internal</generic_parser>
+        <description>This device can register only using this ip address </description>
+      </param>
+      <param name="audio_tos">
+        <required>0</required>
+        <type>generic</type>
+        <generic_parser>(tos)=[[value]]|lowdelay|throughput|reliability|mincost|none</generic_parser>
+        <description>sets the audio/rtp packets Type of Service (TOS)  (defaults to 0xb8 = 10111000 = 184 = DSCP:101110 = EF) Others possible values : 0x??, lowdelay, throughput, reliability, mincost(solaris), none </description>
+      </param>
+      <param name="audio_cos">
+        <required>0</required>
+        <type>generic</type>
+        <generic_parser>(cos)=[[value]]</generic_parser>
+        <description>sets the audio/rtp packets Class of Service (COS) (defaults to 6) </description>
+      </param>
+      <param name="video_tos">
+        <required>0</required>
+        <type>generic</type>
+        <generic_parser>(tos)=[[value]]|lowdelay|throughput|reliability|mincost|none</generic_parser>
+        <description>sets the video/rtp packets Type of Service (TOS)  (defaults to 0x88 = 10001000 = 136 = DSCP:100010 = AF41) </description>
+      </param>
+      <param name="video_cos">
+        <required>0</required>
+        <type>generic</type>
+        <generic_parser>(cos)=[[value]]</generic_parser>
+        <description>sets the video/rtp packets Class of Service (COS) (defaults to 5) </description>
+      </param>
+      <param name="trustphoneip">
+        <required>0</required>
+        <type>boolean</type>
+        <description>The phone has a ip address. It could be private, so if the phone is behind NAT  we don\'t have to trust the phone ip address, but the ip address of the connection </description>
+      </param>
+      <param name="nat">
+        <required>0</required>
+        <type>boolean</type>
+        <description>Device NAT support (default Off) </description>
+      </param>
+      <param name="directrtp">
+        <required>0</required>
+        <type>boolean</type>
+        <description>This option allow devices to do direct RTP sessions (default Off)								 </description>
+      </param>
+      <param name="earlyrtp">
+        <required>0</required>
+        <type>generic</type>
+        <generic_parser>(earlyrtp)=none|offhook|dial|ringout|progress</generic_parser>
+        <description>valid options: none, offhook, dial, ringout and progress. default is progress. The audio stream will be open in the progress and connected state by default. </description>
+      </param>
+      <param name="private">
+        <required>0</required>
+        <type>boolean</type>
+        <description>permit the private function softkey for this device </description>
+      </param>
+      <param name="privacy">
+        <required>0</required>
+        <type>generic</type>
+        <generic_parser>(privacyFeature)=full|on|off</generic_parser>
+        <description>permit the private function softkey for this device </description>
+      </param>
+      <param name="mwilamp">
+        <required>0</required>
+        <type>generic</type>
+        <generic_parser>(mwilamp)=on|off|wink|flash|blink</generic_parser>
+        <description>Set the MWI lamp style when MWI active to on, off, wink, flash or blink </description>
+      </param>
+      <param name="mwioncall">
+        <required>0</required>
+        <type>boolean</type>
+        <description>Set the MWI on call. </description>
+      </param>
+      <param name="meetme">
+        <required>0</required>
+        <type>boolean</type>
+        <description>enable/disable conferencing via app_meetme (on/off) </description>
+      </param>
+      <param name="meetmeopts">
+        <required>0</required>
+        <type>string</type>
+        <size>45</size>
+        <description>options to send the app_meetme application (default \'qd\' = quiet,dynamic pin) Other options (A,a,b,c,C,d,D,E,e,F,i,I,l,L,m,M,o,p,P,q,r,s,S,t,T,w,x,X,1) see app_meetme documentation </description>
+      </param>
+      <param name="softkeyset">
+        <required>0</required>
+        <type>string</type>
+        <size>45</size>
+        <description>use specified softkeyset with name softkeyset1 </description>
+      </param>
+      <param name="pickupexten">
+        <required>0</required>
+        <type>boolean</type>
+        <default>no</default>
+        <description>enable Pickup function to direct pickup an extension </description>
+      </param>
+      <param name="pickupcontext">
+        <required>0</required>
+        <type>generic</type>
+        <generic_parser>(context)=[[context]]</generic_parser>
+        <default>sccp</default>
+        <description>context where direct pickup search for extensions. if not set it will be ignored. </description>
+      </param>
+      <param name="pickupmodeanswer">
+        <required>0</required>
+        <type>boolean</type>
+        <default>yes</default>
+        <description>on = asterisk way, the call has been answered when picked up </description>
+      </param>
+      <param name="monitor">
+        <required>0</required>
+        <type>boolean</type>
+      </param>
+      <param name="allowoverlap">
+        <required>0</required>
+        <type>boolean</type>
+        <description>Allow for Overlap dialing (Continue dialing after the first part of the number has already been send to the pstn) </description>
+      </param>
+      <param name="setvar">
+        <required>0</required>
+        <multiple>1</multiple>
+        <type>generic</type>
+        <generic_parser>(variables)=[[string]]</generic_parser>
+        <description>extra variables to be set on line initialization multiple entries possible (for example the sip number to use when dialing outside) format setvar=param=value, for example setvar=sipno=12345678 </description>
+      </param>
+      <param name="permithost">
+        <required>0</required>
+        <multiple>1</multiple>
+        <type>generic</type>
+        <generic_parser>(permithosts)=[[hostname]]</generic_parser>
+        <description>permit/deny but by resolved hostname </description>
+      </param>
+      <param name="addon">
+        <required>0</required>
+        <type>generic</type>
+        <generic_parser>(addons)=7914,7915,7916,SPA500S</generic_parser>
+        <description>One of 7914, 7915, 7916 </description>
+      </param>
+      <param name="button">
+        <required>0</required>
+        <multiple>1</multiple>
+        <type>generic</type>
+        <generic_parser>(button)=[[button]]</generic_parser>
+      </param>
+      <param name="digittimeout">
+        <required>0</required>
+        <type>int</type>
+        <size>8</size>
+        <default>8</default>
+        <description>More digits </description>
+      </param>
+      <param name="allowRinginNotification">
+        <required>0</required>
+        <type>boolean</type>
+        <default>no</default>
+        <description>allow ringin notification for hinted extensions (Boolean, default=no). experimental configuration param that may be removed in further version  </description>
+      </param>
+    </params>
+  </section>
+  <section name="line">
+    <params>
+      <param name="name">
+        <required>0</required>
+        <type>string</type>
+        <size>45</size>
+        <description>line name </description>
+      </param>
+      <param name="line">
+        <required>0</required>
+        <type>string</type>
+        <size>45</size>
+        <description>line name </description>
+      </param>
+      <param name="type">
+        <required>0</required>
+        <type>string</type>
+        <size>45</size>
+        <description>line </description>
+      </param>
+      <param name="id">
+        <required>0</required>
+        <type>string</type>
+        <size>45</size>
+        <description>id </description>
+      </param>
+      <param name="pin">
+        <required>1</required>
+        <type>string</type>
+        <size>45</size>
+        <description>pin </description>
+      </param>
+      <param name="label">
+        <required>1</required>
+        <type>string</type>
+        <size>45</size>
+        <description>label </description>
+      </param>
+      <param name="description">
+        <required>0</required>
+        <type>string</type>
+        <size>45</size>
+        <description>description </description>
+      </param>
+      <param name="context">
+        <required>0</required>
+        <type>string</type>
+        <size>45</size>
+        <description>pbx dialing context </description>
+      </param>
+      <param name="cid_name">
+        <required>1</required>
+        <type>string</type>
+        <size>45</size>
+        <description>callerid name </description>
+      </param>
+      <param name="cid_num">
+        <required>1</required>
+        <type>string</type>
+        <size>45</size>
+        <description>callerid number </description>
+      </param>
+      <param name="defaultSubscriptionId_name">
+        <required>0</required>
+        <type>string</type>
+        <size>45</size>
+        <description>Name used on a shared line when no name is specified on the line button for the device </description>
+      </param>
+      <param name="defaultSubscriptionId_number">
+        <required>0</required>
+        <type>string</type>
+        <size>45</size>
+        <description>Number used on a shared line when no name is specified on the line button for the device </description>
+      </param>
+      <param name="callerid">
+        <required>0</required>
+        <type>string</type>
+        <size>45</size>
+        <description>obsolete callerid param. Use cid_num and cid_name </description>
+      </param>
+      <param name="mailbox">
+        <required>0</required>
+        <type>generic</type>
+        <generic_parser>(mailbox)=mailbox@context</generic_parser>
+        <description>Mailbox to store messages in </description>
+      </param>
+      <param name="vmnum">
+        <required>0</required>
+        <type>string</type>
+        <size>45</size>
+        <description>Number to dial to get to the users Mailbox </description>
+      </param>
+      <param name="adhocNumber">
+        <required>0</required>
+        <type>string</type>
+        <size>45</size>
+        <description>Adhoc Number or Private-line automatic ring down (PLAR): Adhoc/PLAR circuits have statically configured endpoints and do not require the user dialing to connect calls.  - The adhocNumber is dialed as soon as the Phone is taken off-hook or when the new-call button is pressed.  - The number will not be dialed when choosing a line; so when you choose a line you can enter a number manually. </description>
+      </param>
+      <param name="meetme">
+        <required>0</required>
+        <type>boolean</type>
+        <description>enable/disable conferencing via meetme, make sure you have one of the meetme apps mentioned below activated in module.conf. When switching meetme=on it will search for the first of these three possible meetme applications and set these defaults. Meetme=>\'qd\', ConfBridge=>\'Mac\', Konference=>\'MTV\' </description>
+      </param>
+      <param name="meetmenum">
+        <required>0</required>
+        <type>string</type>
+        <size>45</size>
+        <description>This extension will receive meetme requests, SCCP_MEETME_ROOM channel variable will contain the room number dialed into simpleswitch (this parameter is going to be removed). </description>
+      </param>
+      <param name="meetmeopts">
+        <required>0</required>
+        <type>string</type>
+        <size>45</size>
+        <description>options to send the meetme application, defaults are dependent on meetme app see the list above. Other options (app_meetme: A,a,b,c,C,d,D,E,e,F,i,I,l,L,m,M,o,p,P,q,r,s,S,t,T,w,x,X,1) see conferencing app for specific documentation </description>
+      </param>
+      <param name="transfer">
+        <required>0</required>
+        <type>boolean</type>
+        <description>per line transfer capability </description>
+      </param>
+      <param name="incominglimit">
+        <required>0</required>
+        <type>unsigned int</type>
+        <size>8</size>
+        <default>6</default>
+        <description>allow x number of incoming calls (call waiting) </description>
+      </param>
+      <param name="echocancel">
+        <required>0</required>
+        <type>boolean</type>
+        <description>sets the phone echocancel for this line </description>
+      </param>
+      <param name="silencesuppression">
+        <required>0</required>
+        <type>boolean</type>
+        <description>sets the silence suppression for this line </description>
+      </param>
+      <param name="language">
+        <required>0</required>
+        <type>string</type>
+        <size>45</size>
+        <description>sets the language setting per line </description>
+      </param>
+      <param name="musicclass">
+        <required>0</required>
+        <type>string</type>
+        <size>45</size>
+        <description>sets the music on hold class per line </description>
+      </param>
+      <param name="accountcode">
+        <required>0</required>
+        <type>string</type>
+        <size>45</size>
+        <description>accountcode for this line to make billing per call possible </description>
+      </param>
+      <param name="amaflags">
+        <required>0</required>
+        <type>generic</type>
+        <generic_parser>(amaflags)=[[string]]</generic_parser>
+        <description>sets the AMA flags stored in the CDR record for this line </description>
+      </param>
+      <param name="callgroup">
+        <required>0</required>
+        <type>generic</type>
+        <generic_parser>(group)=[[fromto]],[[value]]</generic_parser>
+        <description>sets the caller groups this line is a member of </description>
+      </param>
+      <param name="pickupgroup">
+        <required>0</required>
+        <type>generic</type>
+        <generic_parser>(group)=[[fromto]],[[value]]</generic_parser>
+        <description>sets the pickup groups this line is a member of (this phone can pickup calls from remote phones which are in this caller group </description>
+      </param>
+      <param name="trnsfvm">
+        <required>0</required>
+        <type>string</type>
+        <size>45</size>
+        <description>extension to redirect the caller to for voice mail </description>
+      </param>
+      <param name="secondary_dialtone_digits">
+        <required>0</required>
+        <type>generic</type>
+        <generic_parser>(secondaryDialtoneDigits)=[[value]]</generic_parser>
+        <description>digits to indicate an external line to user (secondary dialtone) (max 9 digits) </description>
+      </param>
+      <param name="secondary_dialtone_tone">
+        <required>0</required>
+        <type>unsigned int</type>
+        <size>8</size>
+        <default>0x22</default>
+        <description>outside dialtone frequency </description>
+      </param>
+      <param name="setvar">
+        <required>0</required>
+        <multiple>1</multiple>
+        <type>generic</type>
+        <generic_parser>(variables)=[[string]]</generic_parser>
+        <description>extra variables to be set on line initialization multiple entries possible (for example the sip number to use when dialing outside) format setvar=param=value, for example setvar=sipno=12345678 </description>
+      </param>
+      <param name="dnd">
+        <required>0</required>
+        <type>generic</type>
+        <generic_parser>(dnd)=reject|silent|user|on|off</generic_parser>
+        <default>reject</default>
+        <description>allow setting dnd for this line. Valid values are \'off\', \'on\' (busy signal), \'reject\' (busy signal), \'silent\' (ringer = silent) or user to toggle on phone </description>
+      </param>
+      <param name="regexten">
+        <required>0</required>
+        <type>string</type>
+        <size>45</size>
+        <description>SCCP Lines will we added to the regcontext with this number for Dundi look up purpose If regexten is not filled in the line name (categoryname between []) will be used </description>
+      </param>
+    </params>
+  </section>
+  <section name="softkey">
+    <params>
+      <param name="type">
+        <required>0</required>
+        <type>string</type>
+        <size>45</size>
+        <default>softkeyset</default>
+      </param>
+      <param name="name">
+        <required>0</required>
+        <type>string</type>
+        <size>45</size>
+        <description>softkeyset name </description>
+      </param>
+      <param name="connected">
+        <required>0</required>
+        <type>string</type>
+        <size>45</size>
+        <default>hold,endcall,park,select,cfwdall,cfwdbusy,idivert</default>
+      </param>
+      <param name="onhold">
+        <required>0</required>
+        <type>string</type>
+        <size>45</size>
+        <default>resume,newcall,endcall,transfer,conflist,select,dirtrfr,idivert,meetme</default>
+      </param>
+      <param name="ringin">
+        <required>0</required>
+        <type>string</type>
+        <size>45</size>
+        <default>answer,endcall,transvm,idivert</default>
+      </param>
+      <param name="offhook">
+        <required>0</required>
+        <type>string</type>
+        <size>45</size>
+        <default>redial,endcall,private,cfwdall,cfwdbusy,pickup,gpickup,meetme,barge</default>
+      </param>
+      <param name="conntrans">
+        <required>0</required>
+        <type>string</type>
+        <size>45</size>
+        <default>hold,endcall,transfer,conf,park,select,dirtrfr,meetme,cfwdall,cfwdbusy</default>
+      </param>
+      <param name="digitsfoll">
+        <required>0</required>
+        <type>string</type>
+        <size>45</size>
+        <default>back,endcall</default>
+      </param>
+      <param name="connconf">
+        <required>0</required>
+        <type>string</type>
+        <size>45</size>
+        <default>conflist,endcall,join,hold</default>
+      </param>
+      <param name="ringout">
+        <required>0</required>
+        <type>string</type>
+        <size>45</size>
+        <default>endcall,transfer,cfwdall,idivert</default>
+      </param>
+      <param name="offhookfeat">
+        <required>0</required>
+        <type>string</type>
+        <size>45</size>
+        <default>redial,endcall</default>
+      </param>
+      <param name="onhint">
+        <required>0</required>
+        <type>string</type>
+        <size>45</size>
+        <default>redial,newcall,pickup,gpickup,barge</default>
+      </param>
+      <param name="onstealable">
+        <required>0</required>
+        <type>string</type>
+        <size>45</size>
+        <default>redial,newcall,cfwdall,pickup,gpickup,dnd,intrcpt</default>
+      </param>
+    </params>
+  </section>
+</sccp>
